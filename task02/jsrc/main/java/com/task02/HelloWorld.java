@@ -24,7 +24,6 @@ public class HelloWorld implements RequestHandler<Map<String, Object>, Map<Strin
         String method = (String) request.get("httpMethod");
 
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("headers", Map.of("Content-Type", "application/json"));
 
         if ("/hello".equals(path) && "GET".equalsIgnoreCase(method)) {
             resultMap.put("statusCode", 200);
