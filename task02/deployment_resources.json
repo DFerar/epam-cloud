@@ -30,14 +30,17 @@
     "custom_policies": [
       "lambda-basic-execution"
     ],
-    "resource_type": "iam_role"
-  },
-  "hello_world_2-role": {
-    "predefined_policies": [],
-    "principal_service": "lambda",
-    "custom_policies": [
-      "lambda-basic-execution"
-    ],
-    "resource_type": "iam_role"
+    "resource_type": "iam_role",
+    "url_config": {
+      "auth_type": "NONE",
+      "cors": {
+        "allow_origins": [
+          "*"
+        ],
+        "allow_methods": [
+          "GET"
+        ]
+      }
+    }
   }
 }
