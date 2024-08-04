@@ -18,18 +18,6 @@
           ],
           "Effect": "Allow",
           "Resource": "*"
-        },
-        {
-          "StatementId": "FunctionURLAllowPublicAccess",
-          "Effect": "Allow",
-          "Principal": "*",
-          "Action": "lambda:InvokeFunctionUrl",
-          "Resource": "arn:aws:lambda:eu-central-1:196241772369:function:cmtr-7b43098b-hello_world-test",
-          "Condition": {
-            "StringEquals": {
-              "lambda:FunctionUrlAuthType": "NONE"
-            }
-          }
         }
       ],
       "Version": "2012-10-17"
@@ -37,6 +25,14 @@
     "resource_type": "iam_policy"
   },
   "hello_world-role": {
+    "predefined_policies": [],
+    "principal_service": "lambda",
+    "custom_policies": [
+      "lambda-basic-execution"
+    ],
+    "resource_type": "iam_role"
+  },
+  "hello_world_2-role": {
     "predefined_policies": [],
     "principal_service": "lambda",
     "custom_policies": [
