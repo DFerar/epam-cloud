@@ -8,6 +8,7 @@
     <artifactId>task02</artifactId>
     <version>1.0.0</version>
 
+
     <properties>
         <maven-shade-plugin.version>3.5.2</maven-shade-plugin.version>
         <syndicate.java.plugin.version>1.13.0</syndicate.java.plugin.version>
