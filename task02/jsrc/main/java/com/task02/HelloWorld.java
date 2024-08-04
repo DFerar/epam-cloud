@@ -2,6 +2,7 @@ package com.task02;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
 import com.syndicate.deployment.model.lambda.url.AuthType;
@@ -21,17 +22,14 @@ import java.util.Map;
         authType = AuthType.NONE,
         invokeMode = InvokeMode.BUFFERED
 )
-public class HelloWorld implements RequestHandler<Map<String, Object>, Map<String, Object>> {
+public class HelloWorld implements RequestHandler<APIGatewayV2HTTPEvent, Map<String, Object>> {
 
     @Override
-    public Map<String, Object> handleRequest(Map<String, Object> request, Context context) {
+    public Map<String, Object> handleRequest(APIGatewayV2HTTPEvent request, Context context) {
         System.out.println("Hello from lambda");
-
-        String path = (String) request.get("path");
-        String method = (String) request.get("httpMethod");
-
-        Map<String, Object> resultMap = new HashMap<>();
-
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String path = request.getRequestContext().getHttp().getPath();
+        String method = request.getRequestContext().getHttp().getMethod();
         if ("/hello".equals(path) && "GET".equalsIgnoreCase(method)) {
             resultMap.put("statusCode", 200);
             resultMap.put("message", "{\"statusCode\": 200, \"message\": \"Hello from Lambda\"}");
@@ -41,4 +39,5 @@ public class HelloWorld implements RequestHandler<Map<String, Object>, Map<Strin
         }
         return resultMap;
     }
+
 }
