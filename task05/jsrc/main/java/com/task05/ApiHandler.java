@@ -1,5 +1,8 @@
 package com.task05;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -35,7 +38,7 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 	private static final String DYNAMODB_TABLE_NAME = System.getenv("target_table");
 
 	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent request, Context context) {
-
+        AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard().build();
         Map<String, Object> input;
         try {
             input = objectMapper.readValue(request.getBody(), Map.class);
@@ -57,17 +60,19 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
                         "id", new AttributeValue().withS(id.toString()),
                         "principalId", new AttributeValue().withN(input.get("principalId").toString()),
                         "createdAt", new AttributeValue().withS(createdAt),
-                        "content", new AttributeValue().withS(input.toString())
+                        "content", new AttributeValue().withS(input.get("content").toString())
                 ));
-
+        amazonDynamoDB.putItem(putItemRequest);
+        String stringOutput;
         try {
-            return APIGatewayV2HTTPResponse.builder()
-                    .withStatusCode(200)
-                    .withHeaders(headers)
-                    .withBody(objectMapper.writeValueAsString(output.getBody()))
-                    .build();
+            stringOutput = objectMapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        return APIGatewayV2HTTPResponse.builder()
+                .withStatusCode(201)
+                .withHeaders(headers)
+                .withBody(stringOutput)
+                .build();
     }
 }
