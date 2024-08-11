@@ -48,7 +48,7 @@
     "delay_seconds": 0,
     "maximum_message_size": 1024,
     "message_retention_period": 60,
-    "receive_message_wait_time_seconds": 20,
+    "receive_message_wait_time_seconds": 5,
     "policy": {},
     "redrive_policy": {},
     "kms_master_key_id": "b328b33f-51fd-44ab-bdd9-e182a015bffd",
