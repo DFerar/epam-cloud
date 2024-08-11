@@ -21,13 +21,13 @@ import java.util.Map;
 @SqsTriggerEventSource(
 	targetQueue = "async_queue",
 	batchSize = 10)
-public class SqsHandler implements RequestHandler<SQSEvent, Void> {
+public class SqsHandler implements RequestHandler<SQSEvent, String> {
 	@Override
-	public Void handleRequest(SQSEvent event, Context context) {
+	public String handleRequest(SQSEvent event, Context context) {
 		event.getRecords().forEach(record -> {
 			String message = record.getBody();
 			context.getLogger().log("SQS Message: " + message);
 		});
-		return null;
+		return "Success";
 	}
 }
