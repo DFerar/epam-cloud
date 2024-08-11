@@ -51,7 +51,7 @@
     "receive_message_wait_time_seconds": 5,
     "policy": {},
     "redrive_policy": {},
-    "kms_master_key_id": "b328b33f-51fd-44ab-bdd9-e182a015bffd",
+    "kms_master_key_id": "28251c32-1f2b-4701-add9-9500caae8369",
     "kms_data_key_reuse_period_seconds": 60,
     "content_based_deduplication": false
   },

@@ -18,7 +18,7 @@ import com.syndicate.deployment.model.RetentionSetting;
 	batchSize = 10
 )
 public class SqsHandler implements RequestHandler<SQSEvent, String> {
-	@Override
+
 	public String handleRequest(SQSEvent event, Context context) {
 		event.getRecords().forEach(record -> {
 			String message = record.getBody();

@@ -16,7 +16,6 @@ import com.syndicate.deployment.model.RetentionSetting;
 @SnsEventSource(targetTopic = "lambda_topic")
 public class SnsHandler implements RequestHandler<SNSEvent, String> {
 
-    @Override
     public String handleRequest(SNSEvent event, Context context) {
         event.getRecords().forEach(record -> {
             String message = record.getSNS().getMessage();
