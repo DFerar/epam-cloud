@@ -6,6 +6,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
@@ -28,11 +30,11 @@ import java.util.UUID;
 @EnvironmentVariables(value = {
 		@EnvironmentVariable(key = "target_table", value = "Events")
 })
-public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	private static final String DYNAMODB_TABLE_NAME = System.getenv("target_table");
 
-	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent request, Context context) {
 
         Map<String, Object> input;
         try {
@@ -59,10 +61,11 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
                 ));
 
         try {
-            return new APIGatewayProxyResponseEvent()
-                    .withStatusCode(201)
+            return APIGatewayV2HTTPResponse.builder()
+                    .withStatusCode(200)
                     .withHeaders(headers)
-                    .withBody(objectMapper.writeValueAsString(output));
+                    .withBody(objectMapper.writeValueAsString(output.getBody()))
+                    .build();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
