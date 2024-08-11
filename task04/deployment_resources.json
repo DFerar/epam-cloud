@@ -45,15 +45,13 @@
     "resource_type": "sqs_queue",
     "fifo_queue": false,
     "region": "eu-central-1",
-    "visibility_timeout": 30,
+    "visibility_timeout": 300,
     "delay_seconds": 0,
     "maximum_message_size": 1024,
     "message_retention_period": 60,
-    "receive_message_wait_time_seconds": 5,
+    "receive_message_wait_time_seconds": 10,
     "policy": {},
     "redrive_policy": {},
-    "kms_master_key_id": "28251c32-1f2b-4701-add9-9500caae8369",
-    "kms_data_key_reuse_period_seconds": 60,
     "content_based_deduplication": false
   },
   "lambda_topic": {
