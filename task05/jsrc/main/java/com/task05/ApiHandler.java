@@ -7,19 +7,18 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
-@LambdaHandler(
-        lambdaName = "api_handler",
+@LambdaHandler(lambdaName = "api_handler",
         roleName = "api_handler-role",
         isPublishVersion = false,
         logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
@@ -27,29 +26,45 @@ import java.util.UUID;
 @EnvironmentVariables(value = {
         @EnvironmentVariable(key = "target_table", value = "${target_table}")
 })
-public class ApiHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
-    private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
-    private final DynamoDB dynamoDb = new DynamoDB(client);
-    private final String DYNAMODB_TABLE_NAME = System.getenv("target_table");
-    private final Table table = dynamoDb.getTable(DYNAMODB_TABLE_NAME);;
+public class ApiHandler implements RequestHandler<RequestData, Response> {
 
-    public Map<String, Object> handleRequest(Map<String, Object> input, Context context) {
-        String id = UUID.randomUUID().toString();
-        int principalId = (int) input.get("principalId");
-        String createdAt = LocalDateTime.now().toString();
-        Map<String, String> content = (Map<String, String>) input.get("content");
+    AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    private DynamoDB dynamoDb = new DynamoDB(client);
+    private String DYNAMODB_TABLE_NAME = System.getenv("target_table");
+
+    @Override
+    public Response handleRequest(RequestData event1, Context context) {
+
+        int principalId = event1.getPrincipalId();
+        Map<String, String> content = event1.getContent();
+
+        String newId = UUID.randomUUID().toString();
+        String currentTime = DateTimeFormatter.ISO_INSTANT
+                .format(Instant.now().atOffset(ZoneOffset.UTC));
+
+        Table table = dynamoDb.getTable(DYNAMODB_TABLE_NAME);
 
         Item item = new Item()
-                .withPrimaryKey("id", id)
+                .withPrimaryKey("id", newId)
                 .withInt("principalId", principalId)
-                .withString("createdAt", createdAt)
+                .withString("createdAt", currentTime)
                 .withMap("body", content);
+
         table.putItem(item);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("statusCode", 201);
-        response.put("event", item);
+        Event event = Event.builder()
+                .id(newId)
+                .principalId(principalId)
+                .createdAt(currentTime)
+                .body(content)
+                .build();
+
+        Response response = Response.builder()
+                .statusCode(201)
+                .event(event)
+                .build();
 
         return response;
+
     }
 }
