@@ -48,11 +48,7 @@
           "integration_request_body_template": {
             "application/json": ".."
           },
-          "responses": [
-            {
-              "status_code": "201"
-            }
-          ],
+          "responses": [],
           "integration_responses": [],
           "default_error_pattern": true
         }
