@@ -16,7 +16,7 @@
     "dependencies" : [ ],
     "event_sources" : [ ],
     "env_variables" : {
-      "target_table" : "Events"
+      "target_table" : "${target_table}"
     },
     "publish_version" : false,
     "logs_expiration" : "${logs_expiration}",
