@@ -34,7 +34,7 @@ import java.util.UUID;
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
 @EnvironmentVariables(value = {
-		@EnvironmentVariable(key = "target_table", value = "Events")
+		@EnvironmentVariable(key = "target_table", value = "${target_table}")
 })
 public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
     private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
