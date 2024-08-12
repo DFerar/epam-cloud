@@ -8,9 +8,9 @@ public class EventOutput {
     private String id;
     private int principalId;
     private String createdAt;
-    private Map<String, Object> body;
+    private Map<String, String> body;
 
-    public EventOutput(String id, int principalId, String createdAt, Map<String, Object> body) {
+    public EventOutput(String id, int principalId, String createdAt, Map<String, String> body) {
         this.id = id;
         this.principalId = principalId;
         this.createdAt = createdAt;
@@ -41,11 +41,11 @@ public class EventOutput {
         this.createdAt = createdAt;
     }
 
-    public Map<String, Object> getBody() {
+    public Map<String, String> getBody() {
         return body;
     }
 
-    public void setBody(Map<String, Object> body) {
+    public void setBody(Map<String, String> body) {
         this.body = body;
     }
 

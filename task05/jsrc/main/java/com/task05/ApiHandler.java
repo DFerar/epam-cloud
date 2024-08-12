@@ -3,6 +3,9 @@ package com.task05;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -34,11 +37,13 @@ import java.util.UUID;
 		@EnvironmentVariable(key = "target_table", value = "Events")
 })
 public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
-	private final ObjectMapper objectMapper = new ObjectMapper();
-	private static final String DYNAMODB_TABLE_NAME = System.getenv("target_table");
+    private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    private final DynamoDB dynamoDb = new DynamoDB(client);
+    private final String DYNAMODB_TABLE_NAME = System.getenv("target_table");
+    private final Table table = dynamoDb.getTable(DYNAMODB_TABLE_NAME);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
 	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent request, Context context) {
-        AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard().build();
         Map<String, Object> input;
         try {
             input = objectMapper.readValue(request.getBody(), Map.class);
@@ -52,17 +57,14 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
         headers.put("Content-Type", "application/json");
 
         EventOutput output = new EventOutput(id.toString(), (Integer) input.get("principalId"), createdAt,
-                input);
+                (Map<String, String>) input.get("content"));
 
-        PutItemRequest putItemRequest = new PutItemRequest()
-                .withTableName(DYNAMODB_TABLE_NAME)
-                .withItem(Map.of(
-                        "id", new AttributeValue().withS(id.toString()),
-                        "principalId", new AttributeValue().withN(input.get("principalId").toString()),
-                        "createdAt", new AttributeValue().withS(createdAt),
-                        "content", new AttributeValue().withS(input.get("content").toString())
-                ));
-        amazonDynamoDB.putItem(putItemRequest);
+        Item putItemRequest = new Item()
+                .withPrimaryKey("id", output.getId())
+                .withInt("principalId", output.getPrincipalId())
+                .withString("createdAt", output.getCreatedAt())
+                .withMap("body", output.getBody());
+        table.putItem(putItemRequest);
         String stringOutput;
         try {
             stringOutput = objectMapper.writeValueAsString(output);
