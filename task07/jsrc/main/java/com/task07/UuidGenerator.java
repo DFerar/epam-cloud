@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.EventSource;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
+import com.syndicate.deployment.annotations.events.RuleEventSource;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.EventSourceType;
 import com.syndicate.deployment.model.RetentionSetting;
@@ -27,6 +28,9 @@ import java.util.*;
         @EnvironmentVariable(key = "target_bucket", value = "${target_bucket}")
 })
 @EventSource(eventType = EventSourceType.CLOUDWATCH_RULE_TRIGGER)
+@RuleEventSource(
+        targetRule = "uuid_generator"
+)
 public class UuidGenerator implements RequestHandler<ScheduledEvent, String> {
     private final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
