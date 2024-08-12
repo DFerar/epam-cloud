@@ -29,7 +29,7 @@ import java.util.*;
 })
 @EventSource(eventType = EventSourceType.CLOUDWATCH_RULE_TRIGGER)
 @RuleEventSource(
-        targetRule = "uuid_generator"
+        targetRule = "uuid_trigger"
 )
 public class UuidGenerator implements RequestHandler<ScheduledEvent, String> {
     private final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();

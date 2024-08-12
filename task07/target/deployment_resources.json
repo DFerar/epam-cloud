@@ -14,12 +14,12 @@
     "subnet_ids" : [ ],
     "security_group_ids" : [ ],
     "dependencies" : [ {
-      "resource_name" : "uuid_generator",
+      "resource_name" : "uuid_trigger",
       "resource_type" : "cloudwatch_rule"
     } ],
     "event_sources" : [ {
       "resource_type" : "cloudwatch_rule_trigger",
-      "target_rule" : "uuid_generator"
+      "target_rule" : "uuid_trigger"
     } ],
     "env_variables" : {
       "target_bucket" : "${target_bucket}"
