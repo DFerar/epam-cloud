@@ -3,12 +3,12 @@
     "name" : "uuid_generator",
     "lambda_path" : "/Users/denisferar/IdeaProjects/epam-cloud/task07",
     "version" : "1.0.0",
-    "func_name" : "com.task07.UuidGenerator",
+    "func_name" : "com.task07.CloudWatchRuleHandler",
     "deployment_package" : "task07-1.0.0.jar",
     "resource_type" : "lambda",
-    "runtime" : "java11",
+    "runtime" : "java17",
     "architectures" : [ "x86_64" ],
-    "iam_role_name" : "uuid_generator-role",
+    "iam_role_name" : "cloudwatch_handler-role",
     "memory" : 1024,
     "timeout" : 300,
     "subnet_ids" : [ ],
@@ -22,6 +22,7 @@
       "target_rule" : "uuid_trigger"
     } ],
     "env_variables" : {
+      "region" : "${region}",
       "target_bucket" : "${target_bucket}"
     },
     "publish_version" : false,

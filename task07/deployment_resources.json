@@ -14,7 +14,8 @@
             "dynamodb:DeleteItem",
             "ssm:PutParameter",
             "ssm:GetParameter",
-            "kms:Decrypt"
+            "kms:Decrypt",
+            "s3:PutObject"
           ],
           "Effect": "Allow",
           "Resource": "*"
@@ -24,7 +25,7 @@
     },
     "resource_type": "iam_policy"
   },
-  "uuid_generator-role": {
+  "cloudwatch_handler-role": {
     "predefined_policies": [],
     "principal_service": "lambda",
     "custom_policies": [
@@ -32,34 +33,22 @@
     ],
     "resource_type": "iam_role"
   },
-  "${target_bucket}": {
+  "uuid_trigger": {
+    "resource_type": "cloudwatch_rule",
+    "rule_type": "schedule",
+    "region": "eu-central-1",
+    "expression": "rate(1 minute)"
+  },
+  "uuid-storage": {
     "resource_type": "s3_bucket",
     "acl": "private",
     "cors": [],
-    "policy": {
-      "Version": "2012-10-17",
-      "Id": "AllowToMyLambda",
-      "Statement": [
-        {
-          "Action": "s3:PutObject",
-          "Principal": "*",
-          "Resource": "arn:aws:s3:::${target_bucket}/*",
-          "Effect": "Allow",
-          "Sid": "1"
-        }
-      ]
-    },
+    "policy": {},
     "public_access_block": {
       "block_public_acls": true,
       "ignore_public_acls": true,
       "block_public_policy": true,
       "restrict_public_buckets": true
     }
-  },
-  "uuid_trigger": {
-    "resource_type": "cloudwatch_rule",
-    "rule_type": "schedule",
-    "region": "eu-central-1",
-    "expression": "rate(1 minute)"
   }
 }
