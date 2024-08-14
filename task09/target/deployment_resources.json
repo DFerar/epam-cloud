@@ -1,0 +1,40 @@
+{
+  "open-meteo-api-layer" : {
+    "name" : "open-meteo-api-layer",
+    "runtimes" : [ "java17" ],
+    "resource_type" : "lambda_layer",
+    "deployment_package" : "open-meteo-api-layer-assembly.zip",
+    "libraries" : [ "lib/httpclient-4.5.13.jar", "lib/httpcore-4.4.13.jar" ],
+    "architectures" : [ "arm64" ]
+  },
+  "processor" : {
+    "name" : "processor",
+    "lambda_path" : "/Users/denisferar/IdeaProjects/epam-cloud/task09",
+    "version" : "1.0.0",
+    "func_name" : "com.task09.WeatherHandler",
+    "deployment_package" : "task09-1.0.0.jar",
+    "resource_type" : "lambda",
+    "runtime" : "java17",
+    "architectures" : [ "arm64" ],
+    "iam_role_name" : "api_handler-role",
+    "memory" : 1024,
+    "timeout" : 300,
+    "subnet_ids" : [ ],
+    "security_group_ids" : [ ],
+    "dependencies" : [ ],
+    "event_sources" : [ ],
+    "env_variables" : {
+      "region" : "${region}",
+      "table" : "${target_table}"
+    },
+    "tracing_mode" : "Active",
+    "publish_version" : false,
+    "layers" : [ "open-meteo-api-layer" ],
+    "logs_expiration" : "${logs_expiration}",
+    "snap_start" : "None",
+    "url_config" : {
+      "auth_type" : "NONE",
+      "invoke_mode" : "BUFFERED"
+    }
+  }
+}
