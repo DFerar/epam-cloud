@@ -2,11 +2,11 @@
   "openapi": "3.0.1",
   "info": {
     "title": "task11_api",
-    "version": "2024-08-19T14:34:24Z"
+    "version": "2024-08-19T18:11:47Z"
   },
   "servers": [
     {
-      "url": "https://vrbmst6y82.execute-api.eu-central-1.amazonaws.com/{basePath}",
+      "url": "https://eov49yvnx2.execute-api.eu-central-1.amazonaws.com/{basePath}",
       "variables": {
         "basePath": {
           "default": "api"
